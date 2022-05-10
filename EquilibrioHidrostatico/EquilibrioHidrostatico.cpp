@@ -14,6 +14,10 @@ int main() {
 	double* temperatures = get<2>(eqhs::get_alt_temp_values());
 	size_t temps_size = get<3>(eqhs::get_alt_temp_values());
 
+	for (int i = 0; i < alts_size; i++) {
+		cout << "(" << altitudes[i] << ", " << temperatures[i] << ")" << endl;
+	}
+
 	auto end = chrono::system_clock::now();
 	chrono::duration<double> elapsed_seconds = end - start;
 	time_t end_time = chrono::system_clock::to_time_t(end);

@@ -9,5 +9,9 @@ file(COPY "data" DESTINATION ".")
 add_executable (EquilibrioHidrostatico 
 						"EquilibrioHidrostatico.cpp" "EquilibrioHidrostatico.h" 
 						"DataUtils.cpp" "DataUtils.h")
-
-# TODO: Add tests and install targets if needed.
+if(WIN32)
+	set_property (TARGET EquilibrioHidrostatico
+		PROPERTY
+		# Enable C++17 standard compliance
+		CXX_STANDARD 17)
+endif()

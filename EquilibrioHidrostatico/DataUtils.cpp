@@ -13,9 +13,8 @@ namespace eqhs {
 		if (dataPath.empty()) {
 			cout << "Initializing data path" << endl;
 
-			char cwd[256];
-			getcwd(cwd, sizeof(cwd) / sizeof(char));
-			dataPath = cwd + string("/data");
+			filesystem::path curPath = filesystem::current_path();
+			dataPath = curPath.string() + string("/data");
 		}
 
 		return dataPath;
