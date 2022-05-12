@@ -9,7 +9,7 @@
 #include <vector>
 #include <sstream>
 
-namespace eqhs {
+namespace eqhs_data {
 
 	std::string get_data_directory();
 	std::tuple<double*, int, double*, int> get_alt_temp_values();

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-namespace eqhs {
+namespace eqhs_data {
 
 	const string TEMPERATURE_ALTITUDE_FILE_NAME = "Temperature-C7.dat";
 
@@ -14,7 +14,7 @@ namespace eqhs {
 			cout << "Initializing data path" << endl;
 
 			filesystem::path curPath = filesystem::current_path();
-			dataPath = curPath.string() + string("/data");
+			dataPath = curPath.string() + string("/EQHS_Data/data");
 		}
 
 		return dataPath;
