@@ -1,4 +1,4 @@
-z = 0:1000:2e6      # altitude; m
+z = 0:1000:1e7      # altitude; m
 p_z0 = 680          # pressure photosphere base; kg * m^-1 * s^-2
 k_B = 1.380649e-23  # Boltzmann const.; m^2 * kg * s^-2 * K^-1
 T_cor = 1.2e6       # coronal temperature; K
@@ -43,8 +43,12 @@ density_z = density_num ./ density_den
 #########################################
 
 ################ Graph code ################
-function plot_data(x, y, x_label, y_label, fig_title, format)
-  plot(x, y, format, "MarkerSize", 2, "LineWidth", 1)
+function plot_data(x, y, x_label, y_label, fig_title, format, y_log_scale)
+  if (y_log_scale)
+    semilogy(x, y, format, "MarkerSize", 2, "LineWidth", 1)
+  else
+    plot(x, y, format, "MarkerSize", 2, "LineWidth", 1)
+  endif
   grid on
   xlabel(x_label, "FontSize",  14)
   ylabel(y_label, "FontSize",  14)
@@ -55,16 +59,16 @@ subplot(3, 1, 1)
 plot_data(z, p_z, ...
           {"Altitude (z)", "m"}, {"Pressure", "kg * m^{-1} * s^{-2}"}, ...
           "Pressure as function of altitude", ...
-          "b")
+          "b", true)
                     
 subplot(3, 1, 2)          
 plot_data(z, T_z, ...
           {"Altitude (z)", "m"}, {"Temperature", "K"}, ...
           "Temperature as function of altitude", ...
-          "r")
+          "r", false)
           
 subplot(3, 1, 3)
 plot_data(z, density_z, ...
-          {"Altitude (z)", "m"}, {"Density", "kg * K * m^{-3}"}, ...
+          {"Altitude (z)", "m"}, {"Density", "kg * m^{-3}"}, ...
           "Density as function of altitude", ...
-          "g")        
+          "g", true) 
