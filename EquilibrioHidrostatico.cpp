@@ -7,14 +7,7 @@ using namespace std;
 
 int main() {
 	auto start = chrono::system_clock::now();
-
-	eqhs_integrador::test();
-
-	double* altitudes = get<0>(eqhs_data::get_alt_temp_values());
-	size_t alts_size = get<1>(eqhs_data::get_alt_temp_values());
-
-	double* temperatures = get<2>(eqhs_data::get_alt_temp_values());
-	size_t temps_size = get<3>(eqhs_data::get_alt_temp_values());
+	const auto [altitudes, alts_size, temperatures, temps_size] = eqhs_data::get_alt_temp_values();
 
 	for (int i = 0; i < alts_size; i++) {
 		cout << "(" << altitudes[i] << ", " << temperatures[i] << ")" << endl;
