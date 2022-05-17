@@ -44,8 +44,9 @@ tuple<AltitudeFunction, AltitudeFunction, AltitudeFunction> eqhs_integrador::equ
 	int z0_index;
 	double temperature_z0;
 	tie(z0_index, temperature_z0) = temperatureFn.find_val_at_z(physical_constants::z_0);
+	cout << "Reference temperature: (" << get<0>(temperatureFn[z0_index]) << " m, " << temperature_z0 << " K)\n";
 
-	// add scale height at z0
+	// add values at z0
 	double sh_z0;
 	tie(std::ignore, sh_z0) = _get_scale_height_index(temperatureFn, z0_index, scale_height_vals);
 	pressure_vals->push_back(physical_constants::p_z0);

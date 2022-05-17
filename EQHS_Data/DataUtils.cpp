@@ -18,20 +18,14 @@ namespace eqhs_data {
 		return dataPath;
 	}
 
-	//tuple<double*, int, double*, int> get_alt_temp_values() {
 	tuple<shared_ptr<vector<double>>, shared_ptr<vector<double>>> get_alt_temp_values() {
-		//static vector<double> altitude, temperature;
 		auto altitude = make_shared<vector<double>>();
 		auto temperature = make_shared<vector<double>>();
 
-		//if (altitude.empty() && temperature.empty()) {
-		//if (altitude->empty() && temperature->empty()) {
 		string dataFilePath = get_data_directory() + "/" + TEMPERATURE_ALTITUDE_FILE_NAME;
 		cout << "Reading in temperature-altitude values from " << dataFilePath << endl;
 
-		fstream dataFile;
-
-		dataFile.open(dataFilePath, ios::in);
+		fstream dataFile(dataFilePath, ios::in);
 		if (dataFile.is_open()) {
 			string line;
 			while (getline(dataFile, line)) {
@@ -44,9 +38,61 @@ namespace eqhs_data {
 			}
 			dataFile.close();
 		}
-		//}
 
-		//return { &altitude[0], altitude.size(), &temperature[0], temperature.size() };
 		return { altitude, temperature };
+	}
+
+	void export_data_csv(const FinalExportData& exportData, const string outputFileName) {
+		string resultsDir = filesystem::current_path().string() + "/results";
+		if (!filesystem::is_directory(resultsDir) || !filesystem::exists(resultsDir)) { 
+			cout << "Creating results directory at " << resultsDir << "\n";
+			filesystem::create_directory(resultsDir);
+		}
+
+		string outputFilePath = resultsDir + "/" + outputFileName;
+		if (outputFilePath.find(".csv") == string::npos) {
+			outputFilePath += ".csv";
+		}
+
+		cout << "Writing out results to " << outputFilePath << endl;
+
+		ofstream outFile(outputFilePath);
+		if (outFile.is_open()) {
+			string header = "Altitude (z),Temperature (K),Scale Height,Pressure,Density\n";
+			cout << header;
+			outFile << header;
+
+			for (auto i = 0; i < exportData.size(); i++) {
+				double alt = exportData.altitudes->at(i);
+				double temp = exportData.temperature->at(i);
+				double scaleHeight = exportData.scaleHeight->at(i);
+				double pressure = exportData.pressure->at(i);
+				double density = exportData.density->at(i);
+				cout << alt << ","
+					<< temp << ","
+					<< scaleHeight << ","
+					<< pressure << ","
+					<< density << "\n";
+				outFile << alt << ","
+					<< temp << ","
+					<< scaleHeight << ","
+					<< pressure << ","
+					<< density << "\n";
+			}
+			outFile.close();
+		} else {
+			cout << "Unable to open file\n";
+		}
+	}
+
+	FinalExportData::FinalExportData(std::shared_ptr<std::vector<double>> altitudes,
+		std::shared_ptr<std::vector<double>> temperature,
+		std::shared_ptr<std::vector<double>> pressure,
+		std::shared_ptr<std::vector<double>> density,
+		std::shared_ptr<std::vector<double>> scaleHeight)
+		: altitudes(altitudes), temperature(temperature), pressure(pressure), density(density), scaleHeight(scaleHeight) {}
+
+	size_t FinalExportData::size() const {
+		return altitudes->size();
 	}
 }
