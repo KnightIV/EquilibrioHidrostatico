@@ -20,7 +20,7 @@
 [![Forks][forks-shield]][forks-url]
 
 <br />
-<div align="center">
+<!-- <div align="center"> -->
 
 <!-- ABOUT THE PROJECT -->
 ## Acerca del Proyecto
