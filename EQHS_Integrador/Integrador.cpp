@@ -22,7 +22,7 @@ double _trapezoid_integral(double z1, double fn_z1, double z2, double fn_z2) {
 /// <param name="temperatureFn"></param>
 /// <param name="index"></param>
 /// <param name="scaleHeightVals"></param>
-/// <returns>Tuple: <0> altitude (z); <1> scale height at z</returns>
+/// <returns>Tuple: [0] altitude (z); [1] scale height at z</returns>
 tuple<double, double> _get_scale_height_index(AltitudeFunction& temperatureFn, int index, shared_ptr<vector<double>> scaleHeightVals) {
 	tuple<double, double> temperatureTuple = temperatureFn[index];
 	double z = get<0>(temperatureTuple);
