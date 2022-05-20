@@ -62,7 +62,7 @@ Para compilar el código a un archivo binario ejecutable necesita una herramient
 
 Linux
 ```
-sudo apt-get install gcc
+sudo apt-get install make
 ```
 
 MacOS
