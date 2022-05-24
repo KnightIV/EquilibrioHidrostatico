@@ -1,4 +1,4 @@
-z = 0:1000:1e7      # altitude; m
+z = 0:1000:6e6      # altitude; m
 p_z0 = 680          # pressure photosphere base; kg * m^-1 * s^-2
 k_B = 1.380649e-23  # Boltzmann const.; m^2 * kg * s^-2 * K^-1
 T_cor = 1.2e6       # coronal temperature; K

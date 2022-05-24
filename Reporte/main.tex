@@ -1,19 +1,45 @@
-\documentclass{report}
+\documentclass[notitlepage,12pt,a4paper]{report}
 \usepackage{fullpage}
-\usepackage{natbib}
-\bibliographystyle{apalike}
+
+\usepackage{titling}
+\pretitle{\begin{center}\Huge\bfseries}
+\posttitle{\par\end{center}\vskip 0.5em}
+\preauthor{\begin{center}\Large\ttfamily}
+\postauthor{\end{center}}
+\predate{\par\large\centering\ttfamily}
+\postdate{\par}
+
+\usepackage{subcaption}
+\usepackage{graphicx}
+\DeclareCaptionFormat{custom}
+{
+    \textbf{\small #1#2}\textnormal{\footnotesize #3}
+}
+\captionsetup{format=custom}
+
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{abbrvnat}
+
 \usepackage[normalem]{ulem}
 \usepackage[colorlinks,linkcolor=black,urlcolor=blue,citecolor=blue]{hyperref}
-\usepackage{natbib}
 \usepackage{url}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
 \usepackage[spanish]{babel}
 
+\usepackage{caption}
+\DeclareCaptionType{equ}[][]
+
 \renewcommand{\baselinestretch}{2}
+\title{Equilibrio Hidrostático en el Sol}
 \author{Ramón Caballero Villegas}
-\title{Equilibrio Hidrostático}
+\date{26 de Mayo de 2022}
 \begin{document}
+
 \maketitle
-This is a test. \citet*{smithReview}
+
+\input{Introduccion.tex}
 
 \bibliography{ref}
 \end{document}
