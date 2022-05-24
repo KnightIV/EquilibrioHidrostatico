@@ -1,4 +1,4 @@
-\documentclass[notitlepage,12pt,a4paper]{report}
+\documentclass[notitlepage,12pt,a4paper]{article}
 \usepackage{fullpage}
 
 \usepackage{titling}
@@ -20,6 +20,9 @@
 \usepackage[square,numbers]{natbib}
 \bibliographystyle{abbrvnat}
 
+\usepackage{enumitem}
+\setlist{nolistsep}
+
 \usepackage[normalem]{ulem}
 \usepackage[colorlinks,linkcolor=black,urlcolor=blue,citecolor=blue]{hyperref}
 \usepackage{url}
@@ -40,6 +43,8 @@
 \maketitle
 
 \input{Introduccion.tex}
+\input{Codigos.tex}
 
+\clearpage
 \bibliography{ref}
 \end{document}

@@ -1,4 +1,4 @@
-\section*{Introducción}
+\section{Introducción}
 
 En la hidrodinámica se observa un fenómeno denominado como el \textit{equilibrio
 hidrostático}. Un fluido que está en equilibrio hidrostático está sometido a un
@@ -42,7 +42,7 @@ ecuación \ref{balanceFuerzas_diferencial}.
 	\label{balanceFuerzas_imgCubo}
 \end{figure}
 
-\subsection*{Fluidos no Ideales}
+\subsection{Fluidos no Ideales}
 Para que la ecuación \ref{balanceFuerzas_diferencial} pueda ser aplicada a un
 problema particular requiere que la densidad \(\rho\) sea constante en el fluido
 a lo largo del espacio y del tiempo, es decir requiere que el problema trate de
@@ -57,9 +57,9 @@ ecuación asume que la temperatura es constante con la altitud; para analizar el
 equilibrio hidrostático en la superficie del Sol necesitaremos un modelo cuya
 temperatura no sea constante en el espacio.
 
-\subsection*{Equilibrio Hidrostático Dentro del Sol}
+\subsection{Equilibrio Hidrostático Dentro del Sol}
 
-\subsubsection*{Modelo Analítico}
+\subsubsection{Modelo Analítico} \label{sec:modeloAnalitico}
 
 Para el problema resuelto en este proyecto consideramos un modelo del Sol en
 equilibrio hidrostático. El Sol está compuesto principalmente de hidrógeno
@@ -153,7 +153,39 @@ ecuación \ref{ecEstadoDensidadAnalitico}.
 	presión y temperatura a esta altitud. \cite{newtonianCafe}}
 \end{equ}
 
-\subsubsection*{Modelo C7}
+\subsubsection{Modelo C7} \label{sec:c7Modelo}
 El modelo C7 describe el perfil de temperatura del Sol en su estado inactivo
 promedio, enfocado en la cromosfera y la región de transición a la corona.
-\cite{c7ModelPaper} 
+\cite{c7ModelPaper} Este modelo unidimensional e independiente del tiempo está
+basado principalmente en observaciones hechas en el ultravioleta extremo. Este
+perfil se puede visualizar en la figura \ref{c7TemperaturaGrafica}.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[scale=0.3]{Figuras/C7ModeloTemperaturaGrafica.png}
+	\caption{Perfil de temperatura en la cromosfera del Sol, incluyendo la región de transición a la corona. Esta región de transición se puede ver en el fuerte empinamiento de la gráfica, donde la temperatura aumenta rápidamente a niveles mayores de lo visto en la cromosfera.}
+	\label{c7TemperaturaGrafica}
+\end{figure}
+
+El perfil de temperatura visualizado en la figura \ref{c7TemperaturaGrafica} no
+está definido de forma analítica como la ecuación \ref{ecTemperaturaAnalitica},
+si no que es un conjunto de datos discretos, dándonos la temperatura en la
+atmósfera del Sol a cierta altitud. Para obtener los perfiles de densidad y
+presión del plasma en esta región se necesitan las ecuaciones \ref{ecPresionC7}
+a \ref{ecScaleHeightC7}:
+
+\begin{equ}[!ht]
+	\begin{align}
+		p_e (z) = p_{ref} \exp \left(- \int_{z_{ref}}^{z} \frac{dz}{\Lambda (z)}\right) \label{ecPresionC7} \\
+		\rho_e (z) = \frac{p_e (z)}{g \Lambda (z)} \label{ecDensidadC7} \\
+		\Lambda (z) = \frac{k_B T_e (z)}{m g} \label{ecScaleHeightC7}
+	\end{align}
+	\caption*{Ecuaciones del equilibrio hidrostático para el modelo C7 de
+	temperatura. \cite{newtonianCafe} \(\Lambda (z)\) es la altura de escala, la
+	cual modela el decrecimiento de la temperatura del plasma con respecto a la
+	altitud.} 
+\end{equ}
+
+Debido a la ausencia de una solución analítica para estas ecuaciones, estas
+deben ser resueltas usando un método numérico. A continuación explico los
+códigos que se desarrollaron para resolver este problema.
