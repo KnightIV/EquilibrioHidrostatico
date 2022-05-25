@@ -73,12 +73,90 @@ El proyecto en si consiste de dos sub-proyectos, cada uno responsable de
 diferentes funciones. El proyecto ejecutable, \verb|EquilibrioHidrostatico|,
 contiene la rutina principal (la función \verb|main| requerida en todo
 ejecutable escrito en C++) del programa, la cual hace llamadas a los módulos de
-integración y extracción de datos descritos en las siguientes secciones. 
+integración y extracción de datos descritos en las siguientes secciones. Este
+código también cuenta con funcionalidad para medir el tiempo de ejecución, para
+medir correctamente la eficiencia del programa en cuanto al tiempo.
 
 Una de las características principales de este código es que todos los datos los
 mantiene en su memoria durante la ejecución del programa, en vez de calcular los
-valores necesarios para cada altitud e escribir estos a un archivo
-inmediatamente. //TODO: keep going
+valores necesarios para cada altitud y escribir estos a un archivo
+inmediatamente. A pesar de que esto sería lo más eficiente en cuanto al uso de
+memoria del programa, esto le agregaría complejidad al programa, a diferencia de
+mantener los datos en la memoria en todo momento. A pesar de esto, midiendo la
+cantidad de memoria consumida por el programa al final de su ejecución revela
+que solo ocupa 713 kB de memoria, la mayoría siendo la consecuencia de escribir
+los resultados al archivo. El resto del código hace uso de punteros de memoria,
+usando la estructura \verb|shared_ptr| para evitar la complejidad que resultaría
+al tener que manejar los punteros de manera manual. Gracias a estos los datos
+numéricos solo son almacenados una vez durante todo el programa sin necesidad de
+crear copias de los arreglos, evitando el malgasto de memoria.
 
-\subsubsection{\verb|EQHS_Data|}
-Este módulo es el responsable de 
+\subsubsection{\texttt{EQHS\textunderscore Data}} \label{sec:eqhsData} Este
+módulo contiene subrutinas que facilitan la interacción con los datos numéricos
+de la simulación. En particular vienen dos funciones importantes:
+\verb|get_alt_temp_values| y \verb|export_data_csv| que se encargan de leer los
+datos del perfil de temperaturas y exportar los resultados respectivamente. 
+
+Para empezar a resolver las ecuaciones definidas en la sección
+\ref{sec:c7Modelo} el código lee los datos de temperatura dados en el archivo
+\verb|Temperature-C7.dat| dentro del sub-proyecto \verb|EQHS_Data|. En total
+estos vienen siendo en total 140 puntos de datos a varios niveles de altitud. En
+estos definimos la altitud 0 como el nivel de referencia, el cual se va a
+utilizar durante la integración numérica. Estos datos son almacenados dentro del
+programa en arreglos separados para facilitar los cálculos en las subsecuentes
+subrutinas. La función \verb|get_alt_temp_values| es la primera invocada en el
+programa.
+
+Una vez resuelto las ecuaciones del modelo C7 se pueden exportar en formato CSV
+para facilitar su lectura en programas externos (incluyendo el script en Octave
+que se usará para graficar los datos finales) usando la subrutina
+\verb|export_data_csv|. La función crea la carpeta y el archivo de resultados en
+el caso de no existir, y simplemente escribe los resultados en una tabla en el
+archivo, la cual es fácilmente legible por humanos y programas de computadoras.
+
+\subsubsection{\texttt{EQHS\textunderscore Integrador}} El módulo integrador
+consiste de una función responsable por la integración numérica y una clase que
+encapsula los datos correspondientes a las funciones del plasma solar. A
+continuación viene una breve explicación de la funcionalidad expuesta
+públicamente a los proyectos dependiente del \verb|EQHS_Integrador|.
+
+Para facilitar el acoplamiento de datos en el código (particularmente entre la
+altitud y las varias propiedades del plasma como su temperatura y densidad) este
+módulo integrador define una clase contenedor de datos en \verb|DataContainer.h|
+llamado \verb|AltitudeFunction|. Instancias de esta clase no hacen nada más que
+envolver los datos numéricos en una forma conveniente con cual trabajar sin
+crear copias innecesarias de los arreglos. 
+
+Dentro de \verb|Integrador.h| viene definido una única función que hace la
+integración numérica y regresa como resultado las funciones de altura de escala,
+presión, y densidad con respecto a la altitud en forma de varias instancias de
+la clase \verb|AltitudeFunction|. La integración numérica de la escala de
+altura, tal como la requiere la ecuación \ref{ecPresionC7}, se lleva a cabo
+mediante una regla de trapecio a lo largo de la temperatura. Esto nos permite
+tener una alta eficiencia en la integración, siendo que el algoritmo crece
+linealmente con el tamaño del arreglo de temperatura dados por el archivo de
+datos. Una vez que los resultados hayan sido generados se pueden regresar al
+programa principal para poder exportar tal como se mencionó en la sección
+previa.
+
+\subsubsection{Resultados}
+Al terminar la integración numérica y tener todos los resultados guardados en la
+memoria del programa el último paso es exportar los datos tal como fue
+mencionado en la sección \ref{sec:eqhsData}. Las gráficas en la figura
+\ref{modeloNumericoResultadosGraficas} fueron generadas usando Octave, con el
+script \verb|Graficas_EquilibrioHidrostaticoPerfil.m|. 
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[scale=0.3]{Figuras/IntegracionNumericaGrafica.png}
+	\caption{Perfiles de altura de escala, presión, y densidad del plasma en la
+	fotosfera y la región de transición a la corona. En estas figuras los puntos
+	sólidos representan los valores obtenidos de la integración numérica, de los
+	cuales Octave puede interpolar para generar una función suave. Se puede
+	observar que la altura de escala tiene el mismo perfil que la temperatura
+	del modelo C7 visto en la figura \ref{c7TemperaturaGrafica}. Se puede ver la
+	región de transición entre la cromosfera y la corona en las regiones de
+	decaimiento rápido de la presión y la densidad, mientras que la temperatura
+	(y como consecuencia, la altura de escala) experimenta un aumento brusco.}
+	\label{modeloNumericoResultadosGraficas}
+\end{figure}
