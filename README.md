@@ -27,8 +27,8 @@
 
 Simulación del equilibrio hidrostático en el Sol como parte del curso de Hidrodinámica y Magnetohidrodinámica en la Universidad Autónoma de Nuevo León para la Maestría en Astrofísica Planetaria y Tecnologías Afines.
 
+<!-- GETTING STARTED -->
 <!--
-*** <!-- GETTING STARTED -->
 *** ## Corriendo el Programa
 *** 
 *** ### Pre-requisitos
@@ -76,7 +76,9 @@ Simulación del equilibrio hidrostático en el Sol como parte del curso de Hidro
 *** brew install make
 *** ```
 *** 
-*** <!-- USAGE EXAMPLES -->
+-->
+<!-- USAGE EXAMPLES -->
+<!--
 *** ## Usar el Código
 *** ### Compilación
 *** 
