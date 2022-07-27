@@ -27,72 +27,74 @@
 
 Simulación del equilibrio hidrostático en el Sol como parte del curso de Hidrodinámica y Magnetohidrodinámica en la Universidad Autónoma de Nuevo León para la Maestría en Astrofísica Planetaria y Tecnologías Afines.
 
-<!-- GETTING STARTED -->
-## Corriendo el Programa
-
-### Pre-requisitos
-
-#### CMake
-Este proyecto está hecho usando [CMake](https://cmake.org), un conjunto de herramientas para facilitar la compilación de código (en este caso en C++) de manera independiente de plataforma. Para instalarlo siga los siguientes pasos:
-
-Linux
-```
-sudo apt-get install cmake
-```
-
-MacOS (a través de [homebrew](https://brew.sh))
-```
-brew install cmake
-```
-
-Windows: descarga el archivo binario correspondiente a tu sistema operativo de la [página de descargas de CMake](https://cmake.org/download/).
-
-#### Compilador C++
-El compilador usado durante el desarrollo de este programa ha sido el compilador [GNU de C++](https://gcc.gnu.org), por lo cual es el recomendado al compilar en Linux.
-
-Linux
-```
- sudo apt-get install gcc
-```
-
-En MacOS puede intentar usar el compilador de `clang++` que viene con las herramientas de [XCode para la terminal](https://mac.install.guide/commandlinetools/index.html) si ya lo tiene instalado. Si no, puede intentar [instalar gcc](https://discussions.apple.com/thread/8336714) en su Mac.
-
-#### Make
-Para compilar el código a un archivo binario ejecutable necesita una herramienta de compilación; esta tarea no está hecha por `cmake`. 
-
-Linux
-```
-sudo apt-get install make
-```
-
-MacOS
-```
-xcode-select --install
-```
-
-O como alternativa a través de `homebrew`:
-```
-brew install make
-```
-
-<!-- USAGE EXAMPLES -->
-## Usar el Código
-### Compilación
-
-Asegura de estar en la carpeta de más alto nivel del proyecto (`EquilibrioHidrostatico`)
-```
-mkdir build && cd build 
-cmake ..
-make
-```
-
-### Correr el Código
-Una vez que el archivo binario haya sido generado lo podrá correr dentro de la carpeta `build` que creamos en el paso anterior:
-```
-./EquilibrioHidrostatico
-```
-
-En la consola podrá ver la ubicación del archivo donde se guardó los resultados de la integración numérica.
+<!--
+*** <!-- GETTING STARTED -->
+*** ## Corriendo el Programa
+*** 
+*** ### Pre-requisitos
+*** 
+*** #### CMake
+*** Este proyecto está hecho usando [CMake](https://cmake.org), un conjunto de herramientas para facilitar la compilación de código (en este caso en C++) de manera independiente de plataforma. Para instalarlo siga los siguientes pasos:
+*** 
+*** Linux
+*** ```
+*** sudo apt-get install cmake
+*** ```
+*** 
+*** MacOS (a través de [homebrew](https://brew.sh))
+*** ```
+*** brew install cmake
+*** ```
+*** 
+*** Windows: descarga el archivo binario correspondiente a tu sistema operativo de la [página de descargas de CMake](https://cmake.org/download/).
+*** 
+*** #### Compilador C++
+*** El compilador usado durante el desarrollo de este programa ha sido el compilador [GNU de C++](https://gcc.gnu.org), por lo cual es el recomendado al compilar en Linux.
+*** 
+*** Linux
+*** ```
+***  sudo apt-get install gcc
+*** ```
+*** 
+*** En MacO***S puede intentar usar el compilador de `clang++` que viene con las herramientas de [XCode para la terminal](https://mac.install.guide/commandlinetools/index.html) si ya lo tiene instalado. Si no, puede intentar [instalar gcc](https://discussions.apple.com/thread/833 6714) en ***su Mac.***
+*** 
+*** #### Make
+*** Para compilar el código a un archivo binario ejecutable necesita una herramienta de compilación; esta tarea no está hecha por `cmake`. 
+*** 
+*** Linux
+*** ```
+*** sudo apt-get install make
+*** ```
+*** 
+*** MacOS
+*** ```
+*** xcode-select --install
+*** ```
+*** 
+*** O como alternativa a través de `homebrew`:
+*** ```
+*** brew install make
+*** ```
+*** 
+*** <!-- USAGE EXAMPLES -->
+*** ## Usar el Código
+*** ### Compilación
+*** 
+*** Asegura de estar en la carpeta de más alto nivel del proyecto (`EquilibrioHidrostatico`)
+*** ```
+*** mkdir build && cd build 
+*** cmake ..
+*** make
+*** ```
+*** 
+*** ### Correr el Código
+*** Una vez que el archivo binario haya sido generado lo podrá correr dentro de la carpeta `build` que creamos en el paso anterior:
+*** ```
+*** ./EquilibrioHidrostatico
+*** ```
+*** 
+*** En la consola podrá ver la ubicación del archivo donde se guardó los resultados de la integración numérica.
+-->
 
 <!-- CONTACT -->
 ## Contact
