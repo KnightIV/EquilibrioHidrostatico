@@ -1,13 +1,8 @@
 #include "cuda_common.cuh"
 
 #include <iostream>
-#include <string>
-#include <filesystem>
 #include <fstream>
-#include <tuple>
-#include <vector>
-#include <sstream>
-#include <memory>
+#include <filesystem>
 
 #include "eqhs_phys.cuh"
 
@@ -36,48 +31,62 @@ struct FinalExportData {
 
 	const double *altitudes, *temperature, *pressure, *density;
 	const int size;
+
+	FinalExportData(const double *altitudes, const double *temperature, const double *pressure, const double *density, const int size)
+		: altitudes(altitudes), temperature(temperature), pressure(pressure), density(density), size(size) {
+	}
+
+	~FinalExportData() {
+		delete[] altitudes;
+		delete[] temperature;
+		delete[] pressure;
+		delete[] density;
+	}
 };
 
-//void export_data_csv(const FinalExportData &exportData, const string outputFileName) {
-//	string resultsDir = filesystem::current_path().string() + "/results";
-//	if (!filesystem::is_directory(resultsDir) || !filesystem::exists(resultsDir)) {
-//		cout << "Creating results directory at " << resultsDir << "\n";
-//		filesystem::create_directory(resultsDir);
-//	}
-//
-//	string outputFilePath = resultsDir + "/" + outputFileName;
-//	if (outputFilePath.find(".csv") == string::npos) {
-//		outputFilePath += ".csv";
-//	}
-//
-//	cout << "Writing out results to " << outputFilePath << endl;
-//
-//	ofstream outFile(outputFilePath);
-//	if (outFile.is_open()) {
-//		string header = "Altitude (z),Temperature (K),Scale Height,Pressure,Density\n";
-//		cout << header;
-//		outFile << header;
-//
-//		for (auto i = 0; i < exportData.size; i++) {
-//			double alt = exportData.altitudes[i];
-//			double temp = exportData.temperature[i];
-//			double pressure = exportData.pressure[i];
-//			double density = exportData.density[i];
-//			cout << alt << ","
-//				<< temp << ","
-//				<< pressure << ","
-//				<< density << "\n";
-//			outFile << alt << ","
-//				<< temp << ","
-//				<< pressure << ","
-//				<< density << "\n";
-//		}
-//		outFile.close();
-//	} else {
-//		cout << "Unable to open file\n";
-//	}
-//}
+void exportDataCsv(const FinalExportData &exportData, const string outputFileName) {
+	string resultsDir = std::filesystem::current_path().string() + "/results";
+	if (!std::filesystem::is_directory(resultsDir) || !std::filesystem::exists(resultsDir)) {
+		cout << "Creating results directory at " << resultsDir << "\n";
+		std::filesystem::create_directory(resultsDir);
+	}
 
+	string outputFilePath = resultsDir + "/" + outputFileName;
+	if (outputFilePath.find(".csv") == string::npos) {
+		outputFilePath += ".csv";
+	}
+
+	cout << "Writing out results to " << outputFilePath << endl;
+
+	ofstream outFile(outputFilePath);
+	if (outFile.is_open()) {
+		string header = "Altitude (z),Temperature (K),Pressure,Density\n";
+#if 0
+		cout << header;
+#endif
+		outFile << header;
+
+		for (auto i = 0; i < exportData.size; i++) {
+			double alt = exportData.altitudes[i];
+			double temp = exportData.temperature[i];
+			double pressure = exportData.pressure[i];
+			double density = exportData.density[i];
+#if 0
+			cout << alt << ","
+				<< temp << ","
+				<< pressure << ","
+				<< density << "\n";
+#endif
+			outFile << alt << ","
+				<< temp << ","
+				<< pressure << ","
+				<< density << "\n";
+		}
+		outFile.close();
+	} else {
+		cout << "Unable to open file\n";
+	}
+}
 
 __global__ void initAltitudeGrid(const SimProps *p, double *z) {
 	const int gid = calc1Dgid();
@@ -121,6 +130,18 @@ int main() {
 
 	integrate << <grid, block >> > (d_props, d_z, d_temperature, d_pressure, d_density);
 	gpuErrCheck(cudaDeviceSynchronize());
+
+	double *h_temperature = new double[props.gridSize()];
+	double *h_pressure = new double[props.gridSize()];
+	double *h_density = new double[props.gridSize()];
+	double *h_z = new double[props.gridSize()];
+
+	gpuErrCheck(cudaMemcpy((void **)h_z, d_z, sizeBytes, cudaMemcpyDeviceToHost));
+	gpuErrCheck(cudaMemcpy((void **)h_temperature, d_temperature, sizeBytes, cudaMemcpyDeviceToHost));
+	gpuErrCheck(cudaMemcpy((void **)h_pressure, d_pressure, sizeBytes, cudaMemcpyDeviceToHost));
+	gpuErrCheck(cudaMemcpy((void **)h_density, d_density, sizeBytes, cudaMemcpyDeviceToHost));
+	FinalExportData exportData(h_z, h_temperature, h_pressure, h_density, props.gridSize());
+	exportDataCsv(exportData, "cudaResults.csv");
 
 	gpuErrCheck(cudaFree(d_props));
 	gpuErrCheck(cudaFree(d_z));
