@@ -6,6 +6,6 @@
     <CudaCompile Include="eqhs.cu" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="phys_consts.cuh" />
+    <ClInclude Include="eqhs_phys.cuh" />
   </ItemGroup>
 </Project>

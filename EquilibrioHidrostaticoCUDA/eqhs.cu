@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "eqhs_phys.cuh"
+
 using std::cout;
 using std::endl;
 
@@ -21,22 +23,39 @@ __global__ void initAltitudeGrid(const SimProps *p, double *z) {
 	z[gid] = p->gridStep * gid;
 }
 
+__global__ void integrate(const SimProps *p, const double *z, double *temperature, double *pressure, double *density) {
+	
+}
+
 int main() {
 	SimProps p;
+	const long sizeBytes = p.gridSize() * sizeof(double);
 
 	SimProps *d_p;
 	double *d_z;
 
+	double *d_temperature, *d_pressure, *d_density;
+	gpuErrCheck(cudaMalloc((void **)&d_temperature, sizeBytes));
+	gpuErrCheck(cudaMalloc((void **)&d_pressure, sizeBytes));
+	gpuErrCheck(cudaMalloc((void **)&d_density, sizeBytes));
+
 	gpuErrCheck(cudaMalloc((void**) &d_p, sizeof(SimProps)));
 	gpuErrCheck(cudaMemcpy(d_p, &p, sizeof(SimProps), cudaMemcpyHostToDevice));
-	gpuErrCheck(cudaMalloc((void**) &d_z, p.gridSize() * sizeof(double)));
+	gpuErrCheck(cudaMalloc((void**) &d_z, sizeBytes));
 	
 	dim3 block(WARP_SIZE * 16);
 	dim3 grid((p.gridSize() / block.x) + 1);
+	//dim3 block(1), grid(1);
 	initAltitudeGrid << <grid, block >> > (d_p, d_z);
 	gpuErrCheck(cudaDeviceSynchronize());
-	
+
+	integrate << <grid, block >> > (d_p, d_z, d_temperature, d_pressure, d_density);
+	gpuErrCheck(cudaDeviceSynchronize());
+
 	gpuErrCheck(cudaFree(d_p));
 	gpuErrCheck(cudaFree(d_z));
+	gpuErrCheck(cudaFree(d_temperature));
+	gpuErrCheck(cudaFree(d_pressure));
+	gpuErrCheck(cudaFree(d_density));
 	return 0;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace phys_const {
+namespace eqhs_phys {
 
 	constexpr double p_z0 = 680;			// pressure photosphere base; kg *m ^ -1 * s ^ -2
 	constexpr double k_B = 1.380649e-23;	// Boltzmann const.; m ^ 2 * kg * s ^ -2 * K ^ -1
