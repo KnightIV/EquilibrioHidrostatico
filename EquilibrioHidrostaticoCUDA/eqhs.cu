@@ -1,11 +1,34 @@
 #include "cuda_common.cuh"
 
-__global__ void kern() {
-	printf("Hello CUDA\n");
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
+struct SimProps {
+
+	const double gridStep = 1'000;
+	const double z_start = 0;
+	const double z_end = 6e6;
+};
+
+__global__ void initAltitudeGrid(const SimProps *p, double *z) {
+	printf("%f, [%f, %f]\n", p->gridStep, p->z_start, p->z_end);
 }
 
 int main() {
-	kern << <dim3(1), dim3(1) >> > ();
+	SimProps p;
+	SimProps *d_p;
+	
+	gpuErrCheck(cudaMalloc((void**) &d_p, sizeof(SimProps)));
+	gpuErrCheck(cudaMemcpy(d_p, &p, sizeof(SimProps), cudaMemcpyHostToDevice));
+	
+	dim3 grid(1);
+	dim3 block(1);
+	initAltitudeGrid << <grid, block >> > (d_p, nullptr);
+
 	gpuErrCheck(cudaDeviceSynchronize());
+	
+	gpuErrCheck(cudaFree(d_p));
 	return 0;
 }
