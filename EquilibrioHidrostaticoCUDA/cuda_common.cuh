@@ -21,3 +21,7 @@ inline void gpuAssert(const cudaError_t errCode, const char* file, int line, boo
 inline void gpuErrCheck(cudaError_t ans, bool abort = true) {
 	gpuAssert(ans, __FILE__, __LINE__, abort);
 }
+
+__device__ inline const int calc1Dgid() {
+	return (blockIdx.x * blockDim.x) + threadIdx.x;
+}

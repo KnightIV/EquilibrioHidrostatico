@@ -25,11 +25,11 @@ namespace eqhs_phys {
 	}
 
 	__device__ double temperatureIntegral(const double z) {
-		double num_fac1 = (dtc - 1) / z_w;
+		double num_fac1 = (dtc - 1) * z_w;
 		double exp_inner = ((2 * z_t) / z_w) - ((2 * z) / z_w);
 		double ln_inner = dtc * exp(exp_inner) + 1;
 		double den = 2 * t_cor * dtc;
 
-		return (num_fac1 * log(ln_inner) / den) + (z / t_cor);
+		return ((num_fac1 * log(ln_inner)) / den) + (z / t_cor);
 	}
 }

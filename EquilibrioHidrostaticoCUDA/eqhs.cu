@@ -18,18 +18,26 @@ struct SimProps {
 		: gridStep(gridStep), z_start(z_start), z_end(z_end) {
 	}
 
-	inline long gridSize() {
+	__host__ __device__ inline long gridSize() const {
 		return ((long)(z_end - z_start)) / (long)gridStep;
 	}
 };
 
 __global__ void initAltitudeGrid(const SimProps *p, double *z) {
-	int gid = (blockIdx.x * blockDim.x) + threadIdx.x;
-	z[gid] = p->gridStep * gid;
+	const int gid = calc1Dgid();
+
+	if (gid < p->gridSize()) {
+		z[gid] = p->gridStep * gid;
+	}
 }
 
 __global__ void calcTempIntegral(const SimProps *p, const double *z, double *temperature, double *temperatureIntegral) {
-	
+	const int gid = calc1Dgid();
+
+	if (gid < p->gridSize()) {
+		temperature[gid] = eqhs_phys::temperature(z[gid]);
+		temperatureIntegral[gid] = eqhs_phys::temperatureIntegral(z[gid]);
+	}
 }
 
 int main() {
@@ -45,10 +53,10 @@ int main() {
 	gpuErrCheck(cudaMalloc((void **)&d_pressure, sizeBytes));
 	gpuErrCheck(cudaMalloc((void **)&d_density, sizeBytes));
 
-	gpuErrCheck(cudaMalloc((void**) &d_props, sizeof(SimProps)));
+	gpuErrCheck(cudaMalloc((void **)&d_props, sizeof(SimProps)));
 	gpuErrCheck(cudaMemcpy(d_props, &props, sizeof(SimProps), cudaMemcpyHostToDevice));
-	gpuErrCheck(cudaMalloc((void**) &d_z, sizeBytes));
-	
+	gpuErrCheck(cudaMalloc((void **)&d_z, sizeBytes));
+
 	dim3 block(WARP_SIZE * 16);
 	dim3 grid((props.gridSize() / block.x) + 1);
 	//dim3 block(1), grid(1);
