@@ -32,4 +32,18 @@ namespace eqhs_phys {
 
 		return ((num_fac1 * log(ln_inner)) / den) + (z / t_cor);
 	}
+
+	__device__ double pressure(const double temp_z) {
+		double exp_innerfac2_frac = (m_p * sun_g) / (2 * k_B);
+		double exp_fac = exp(temperatureIntegral(temp_z) * (-exp_innerfac2_frac));
+
+		return p_z0 * exp_fac;
+	}
+
+	__device__ double density(const double temp_z, const double pressure_z) {
+		double num = m_p * pressure_z;
+		double den = 2 * k_B * temp_z;
+
+		return num / den;
+	}
 }
