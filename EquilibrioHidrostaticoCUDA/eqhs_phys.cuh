@@ -1,5 +1,8 @@
 #pragma once
 
+#include "cuda_common.cuh"
+#include "math.h"
+
 namespace eqhs_phys {
 
 	constexpr double p_z0 = 680;			// pressure photosphere base; kg *m ^ -1 * s ^ -2
@@ -12,4 +15,21 @@ namespace eqhs_phys {
 	constexpr double m_p = 1.672621e-27;	// proton mass; kg
 
 	constexpr double dtc = t_phot / t_cor;
+
+	__device__ double temperature(const double z) {
+		double fac1 = (t_cor / 2);
+		double fac2_tanh_inner = (z - z_t) / z_w;
+		double tanh_exprsn = (1 - dtc) * tanh(fac2_tanh_inner);
+
+		return fac1 * (1 + dtc + tanh_exprsn);
+	}
+
+	__device__ double temperatureIntegral(const double z) {
+		double num_fac1 = (dtc - 1) / z_w;
+		double exp_inner = ((2 * z_t) / z_w) - ((2 * z) / z_w);
+		double ln_inner = dtc * exp(exp_inner) + 1;
+		double den = 2 * t_cor * dtc;
+
+		return (num_fac1 * log(ln_inner) / den) + (z / t_cor);
+	}
 }
