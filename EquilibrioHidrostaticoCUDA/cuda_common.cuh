@@ -6,6 +6,12 @@
 #include <stdio.h>
 #include <iostream>
 
+#ifdef __INTELLISENSE__
+#define CUDA_KERNEL_ARGS(...)
+#else
+#define CUDA_KERNEL_ARGS(...) <<< __VA_ARGS__ >>>
+#endif
+
 constexpr auto WARP_SIZE = 32;
 
 inline void gpuAssert(const cudaError_t errCode, const char* file, int line, bool abort = true) {

@@ -125,10 +125,10 @@ int main() {
 	dim3 block(WARP_SIZE * 16);
 	dim3 grid((props.gridSize() / block.x) + 1);
 
-	initAltitudeGrid << <grid, block >> > (d_props, d_z);
+	initAltitudeGrid CUDA_KERNEL_ARGS(grid, block) (d_props, d_z);
 	gpuErrCheck(cudaDeviceSynchronize());
 
-	integrate << <grid, block >> > (d_props, d_z, d_temperature, d_pressure, d_density);
+	integrate CUDA_KERNEL_ARGS(grid, block) (d_props, d_z, d_temperature, d_pressure, d_density);
 	gpuErrCheck(cudaDeviceSynchronize());
 
 	double *h_temperature = new double[props.gridSize()];
